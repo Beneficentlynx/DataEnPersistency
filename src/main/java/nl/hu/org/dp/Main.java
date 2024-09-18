@@ -1,13 +1,15 @@
 package nl.hu.org.dp;
 
-import nl.hu.org.dp.DAO.ReizigerDAOPsql;
+import nl.hu.org.dp.infra.DOA.ReizigerDAOPsql;
 import nl.hu.org.dp.Domain.Reiziger;
+import nl.hu.org.dp.infra.hibernate.ReizigerDAOHibernate;
 
 import java.sql.*;
 import java.util.List;
 
 public class Main {
     static Connection connection = null;
+    private static ReizigerDAOHibernate reizigerDAOHibernate = new ReizigerDAOHibernate();
 
     private static Connection getConnection() throws SQLException {
         if (connection == null) {
@@ -77,10 +79,17 @@ public class Main {
         // Voeg aanvullende tests van de ontbrekende CRUD-operaties in.
     }
 
+    private static void testReizigerDAOHIbernate() throws SQLException {
+        System.out.println(reizigerDAOHibernate.findById(1));
+        System.out.println(reizigerDAOHibernate.findByGbdatum(java.sql.Date.valueOf("2002-12-03")));
+    }
+
 
     public static void main(String[] args) throws SQLException {
         System.out.println("Hello world!");
-        ReizigerDAOPsql rdao = new ReizigerDAOPsql();
-        testReizigerDAO(rdao);
+//        ReizigerDAOPsql rdao = new ReizigerDAOPsql();
+//        testReizigerDAO(rdao);
+        testReizigerDAOHIbernate();
+
     }
 }

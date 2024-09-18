@@ -1,5 +1,6 @@
-package nl.hu.org.dp.DAO;
+package nl.hu.org.dp.infra.DOA;
 
+import nl.hu.org.dp.Domain.DAO.ReizigerDAO;
 import nl.hu.org.dp.Domain.Reiziger;
 
 import java.sql.*;
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ReizigerDAOPsql implements ReizigerDAO{
+public class ReizigerDAOPsql implements ReizigerDAO {
     static Connection connection = null;
 
     private static Connection getConnection() throws SQLException {
@@ -19,15 +20,14 @@ public class ReizigerDAOPsql implements ReizigerDAO{
         return connection;
     }
 
-    private static void closeConnection() throws
-            SQLException {
+    private static void closeConnection() throws SQLException {
         if (connection != null) {
             connection.close();
             connection = null;
         }
     }
 
-    public static List findAll() throws SQLException {
+    public List findAll() throws SQLException {
         getConnection();
         String query = "SELECT * FROM reiziger;";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -47,7 +47,7 @@ public class ReizigerDAOPsql implements ReizigerDAO{
 
     }
 
-    public Boolean save(Reiziger reiziger) throws SQLException {
+    public boolean save(Reiziger reiziger) throws SQLException {
         List bestaandeReizigers = findAll();
         for (Object x : bestaandeReizigers){
             x = (Reiziger) x;
@@ -73,7 +73,7 @@ public class ReizigerDAOPsql implements ReizigerDAO{
         return true;
     }
 
-    public Boolean delete(Reiziger reiziger) throws SQLException {
+    public boolean delete(Reiziger reiziger) throws SQLException {
         List bestaandeReizigers = findAll();
         for (Object x : bestaandeReizigers){
             x = (Reiziger) x;
@@ -91,7 +91,17 @@ public class ReizigerDAOPsql implements ReizigerDAO{
         return false;
     }
 
-    public Boolean update(Reiziger reiziger) throws SQLException {
+    @Override
+    public Reiziger findById(int id) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public List<Reiziger> findByGbdatum(Date datum) throws SQLException {
+        return List.of();
+    }
+
+    public boolean update(Reiziger reiziger) throws SQLException {
         List bestaandeReizigers = findAll();
         for (Object x : bestaandeReizigers){
             x = (Reiziger) x;

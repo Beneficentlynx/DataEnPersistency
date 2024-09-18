@@ -1,11 +1,10 @@
-package nl.hu.org.dp.DAO;
+package nl.hu.org.dp.Domain.DAO;
 
-import nl.hu.org.dp.Domain.Reiziger;
+import nl.hu.org.dp.Domain.Adres;
 
 import java.util.List;
 
-public interface ReizigerDAO {
-
+public interface AdresDOA {
     default boolean save(){
         return false;
     }
@@ -18,7 +17,7 @@ public interface ReizigerDAO {
         return false;
     }
 
-    default List<Reiziger> findall(){
+    default List<Adres> findall(){
         return null;
     }
 }
