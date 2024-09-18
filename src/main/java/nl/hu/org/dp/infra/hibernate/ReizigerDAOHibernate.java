@@ -22,17 +22,44 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
 
     @Override
     public boolean save(nl.hu.org.dp.Domain.Reiziger reiziger) throws SQLException {
-        return false;
+        try {
+            Reiziger infraReizeger = new Reiziger(reiziger.getReiziger_id(), reiziger.getVoorletters(), reiziger.getTussenvoegsel(), reiziger.getAchternaam(), reiziger.getGeboortedatum());
+            session.save(infraReizeger);
+            session.beginTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-
     @Override
     public boolean update(nl.hu.org.dp.Domain.Reiziger reiziger) throws SQLException {
-        return false;
+        try {
+            Reiziger infraReizeger = session.get(Reiziger.class, reiziger.getReiziger_id());
+            infraReizeger.setVoorletters(reiziger.getVoorletters());
+            infraReizeger.setTussenvoegsel(reiziger.getTussenvoegsel());
+            infraReizeger.setAchternaam(reiziger.getAchternaam());
+            infraReizeger.setGeboortedatum(reiziger.getGeboortedatum());
+            session.update(infraReizeger);
+            session.beginTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean delete(nl.hu.org.dp.Domain.Reiziger reiziger) throws SQLException {
-        return false;
+        try {
+            Reiziger infraReizeger = session.get(Reiziger.class, reiziger.getReiziger_id());
+            session.delete(infraReizeger);
+            session.beginTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
@@ -68,6 +95,17 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
 
     @Override
     public List<nl.hu.org.dp.Domain.Reiziger> findAll() throws SQLException {
-        return List.of();
+        try {
+            ArrayList<Reiziger> infralists = (ArrayList<Reiziger>) session.createQuery(
+                            "FROM Reiziger", Reiziger.class).list();
+            ArrayList<nl.hu.org.dp.Domain.Reiziger> domainList = new ArrayList<>();
+            for (Reiziger X : infralists){
+                nl.hu.org.dp.Domain.Reiziger domainREIZGER = new nl.hu.org.dp.Domain.Reiziger(X.getReiziger_id(), X.getVoorletters(), X.getTussenvoegsel(), X.getAchternaam(), X.getGeboortedatum());
+                domainList.add(domainREIZGER);
+            }
+            return domainList;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

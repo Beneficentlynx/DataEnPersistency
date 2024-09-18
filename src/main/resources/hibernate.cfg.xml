@@ -12,7 +12,7 @@
         <property name="current_session_context_class">thread</property>
 
         <!-- Set "true" to show SQL statements -->
-        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.show_sql">false</property>
 
         <!-- mapping class using annotation -->
         <mapping class="nl.hu.org.dp.infra.hibernate.Reiziger"></mapping>

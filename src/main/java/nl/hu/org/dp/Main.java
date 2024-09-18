@@ -80,16 +80,32 @@ public class Main {
     }
 
     private static void testReizigerDAOHIbernate() throws SQLException {
+        System.out.println("\n---------- Test ReizigerDAOHibernate -------------");
+        System.out.println("-----------------findAll-----------------");
+        System.out.println(reizigerDAOHibernate.findAll());
+        System.out.println("-----------------findById-----------------");
         System.out.println(reizigerDAOHibernate.findById(1));
+        System.out.println("-----------------findByGbdatum-----------------");
         System.out.println(reizigerDAOHibernate.findByGbdatum(java.sql.Date.valueOf("2002-12-03")));
+        System.out.println("-----------------delete-----------------");
+        int size = reizigerDAOHibernate.findAll().size();
+        Reiziger domeinReiziger = new Reiziger(19, "K", "", "Joost", java.sql.Date.valueOf("2002-12-03"));
+        reizigerDAOHibernate.delete(domeinReiziger);
+        System.out.println(reizigerDAOHibernate.findAll().size() - size);
+        System.out.println("-----------------save-----------------");
+        size = reizigerDAOHibernate.findAll().size();
+        reizigerDAOHibernate.save(domeinReiziger);
+        System.out.println(reizigerDAOHibernate.findAll().size() - size);
+        System.out.println("-----------------update-----------------");
+        System.out.println(reizigerDAOHibernate.findById(19));
+        domeinReiziger.setAchternaam("Klaassen");
+        reizigerDAOHibernate.update(domeinReiziger);
+        System.out.println(reizigerDAOHibernate.findById(19));
+
     }
 
 
     public static void main(String[] args) throws SQLException {
-        System.out.println("Hello world!");
-//        ReizigerDAOPsql rdao = new ReizigerDAOPsql();
-//        testReizigerDAO(rdao);
         testReizigerDAOHIbernate();
-
     }
 }
