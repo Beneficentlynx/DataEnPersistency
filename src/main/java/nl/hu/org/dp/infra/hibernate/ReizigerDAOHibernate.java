@@ -31,7 +31,6 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
             session.beginTransaction().commit();
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }

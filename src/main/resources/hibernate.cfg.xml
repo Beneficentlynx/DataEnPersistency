@@ -17,6 +17,7 @@
         <!-- mapping class using annotation -->
         <mapping class="nl.hu.org.dp.infra.hibernate.Adres"></mapping>
         <mapping class="nl.hu.org.dp.infra.hibernate.Reiziger"></mapping>
+        <mapping class="nl.hu.org.dp.infra.hibernate.OV_chipkaart"></mapping>
     </session-factory>
 
 </hibernate-configuration>

@@ -7,6 +7,7 @@ import nl.hu.org.dp.infra.DOA.OV_chipkaartDOAPSQL;
 import nl.hu.org.dp.infra.DOA.ReizigerDAOPsql;
 import nl.hu.org.dp.Domain.Reiziger;
 import nl.hu.org.dp.infra.hibernate.AdresDAOHibernate;
+import nl.hu.org.dp.infra.hibernate.OV_chipkaartDAOHibernate;
 import nl.hu.org.dp.infra.hibernate.ReizigerDAOHibernate;
 
 import java.sql.*;
@@ -17,6 +18,7 @@ public class Main {
     static Connection connection = null;
     private static ReizigerDAOHibernate reizigerDAOHibernate = new ReizigerDAOHibernate();
     private static AdresDAOHibernate adresDAOHibernate = new AdresDAOHibernate();
+    private static OV_chipkaartDAOHibernate ov_chipkaartDAOHibernate = new OV_chipkaartDAOHibernate();
 
     private static Connection getConnection() throws SQLException {
         if (connection == null) {
@@ -193,8 +195,28 @@ public class Main {
 
     }
 
+    public static void testOV_chipkaartDAOHibernate() throws SQLException {
+        System.out.println("\n---------- Test OV_chipkaartDAOHibernate -------------");
+        System.out.println("---------- Find all OV_chipkaarten -------------");
+        System.out.println(ov_chipkaartDAOHibernate.findAll());
+        System.out.println("---------- Find OV_chipkaart by id -------------");
+        System.out.println(ov_chipkaartDAOHibernate.findById(35283));
+        System.out.println("---------- Save OV_chipkaart -------------");
+        System.out.println(ov_chipkaartDAOHibernate.save(new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, 1)));
+        System.out.println(ov_chipkaartDAOHibernate.findById(3));
+        System.out.println("---------- Update OV_chipkaart -------------");
+        OV_chipkaart ov_chipkaart = new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, 1);
+        ov_chipkaart.setSaldo(30.0f);
+        System.out.println(ov_chipkaartDAOHibernate.update(ov_chipkaart));
+        System.out.println(ov_chipkaartDAOHibernate.findById(3));
+        System.out.println("-----------------find by reiziger ID-----------------");
+        System.out.println(ov_chipkaartDAOHibernate.findByReiziger(new nl.hu.org.dp.infra.hibernate.Reiziger(1, "K", "", "Joost", java.sql.Date.valueOf("2002-12-03"))));
+        System.out.println("---------- Delete OV_chipkaart -------------");
+        System.out.println(ov_chipkaartDAOHibernate.delete(new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, 1)));
+    }
+
 
     public static void main(String[] args) throws SQLException {
-        testOV_chipkaartDAO(new OV_chipkaartDOAPSQL());
+        testOV_chipkaartDAOHibernate();
     }
 }
