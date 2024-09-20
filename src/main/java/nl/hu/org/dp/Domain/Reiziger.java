@@ -1,7 +1,9 @@
 package nl.hu.org.dp.Domain;
 
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.sql.Array;
 
 public class Reiziger {
     private int reiziger_id;
@@ -9,7 +11,7 @@ public class Reiziger {
     private String tussenvoegsel;
     private String achternaam;
     private Date geboortedatum;
-
+    private ArrayList<OV_chipkaart> ov_chipkaarten = new ArrayList<OV_chipkaart>();
 
     public Reiziger(int reiziger_id, String voorletters, String tussenvoegsel, String achternaam, Date geboortedatum){
         this.reiziger_id = reiziger_id;
@@ -49,6 +51,14 @@ public class Reiziger {
 
     public void setAchternaam(String achternaam){
         this.achternaam = achternaam;
+    }
+
+    public void addOVChipkaart(OV_chipkaart ov_chipkaart){
+        ov_chipkaarten.add(ov_chipkaart);
+    }
+
+    public void removeOVChipkaart(OV_chipkaart ov_chipkaart){
+        ov_chipkaarten.remove(ov_chipkaart);
     }
 
 }

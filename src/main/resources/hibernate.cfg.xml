@@ -15,6 +15,7 @@
         <property name="hibernate.show_sql">false</property>
 
         <!-- mapping class using annotation -->
+        <mapping class="nl.hu.org.dp.infra.hibernate.Adres"></mapping>
         <mapping class="nl.hu.org.dp.infra.hibernate.Reiziger"></mapping>
     </session-factory>
 

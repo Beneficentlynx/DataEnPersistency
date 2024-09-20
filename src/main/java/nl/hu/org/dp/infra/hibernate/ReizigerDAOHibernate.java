@@ -23,8 +23,11 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
     @Override
     public boolean save(nl.hu.org.dp.Domain.Reiziger reiziger) throws SQLException {
         try {
+            if(findById(reiziger.getReiziger_id()) != null){
+                return false;
+            }
             Reiziger infraReizeger = new Reiziger(reiziger.getReiziger_id(), reiziger.getVoorletters(), reiziger.getTussenvoegsel(), reiziger.getAchternaam(), reiziger.getGeboortedatum());
-            session.save(infraReizeger);
+            session.persist(infraReizeger);
             session.beginTransaction().commit();
             return true;
         } catch (Exception e) {
@@ -40,7 +43,7 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
             infraReizeger.setTussenvoegsel(reiziger.getTussenvoegsel());
             infraReizeger.setAchternaam(reiziger.getAchternaam());
             infraReizeger.setGeboortedatum(reiziger.getGeboortedatum());
-            session.update(infraReizeger);
+            session.merge(infraReizeger);
             session.beginTransaction().commit();
             return true;
         } catch (Exception e) {
@@ -53,7 +56,7 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
     public boolean delete(nl.hu.org.dp.Domain.Reiziger reiziger) throws SQLException {
         try {
             Reiziger infraReizeger = session.get(Reiziger.class, reiziger.getReiziger_id());
-            session.delete(infraReizeger);
+            session.remove(infraReizeger);
             session.beginTransaction().commit();
             return true;
         } catch (Exception e) {
@@ -66,6 +69,9 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
     public nl.hu.org.dp.Domain.Reiziger findById(int id) throws SQLException {
         try {
             Reiziger infraReizeger = session.get(Reiziger.class, id);
+            if (infraReizeger == null) {
+                return null;
+            }
             nl.hu.org.dp.Domain.Reiziger domainREIZGER = new nl.hu.org.dp.Domain.Reiziger(infraReizeger.getReiziger_id(), infraReizeger.getVoorletters(), infraReizeger.getTussenvoegsel(), infraReizeger.getAchternaam(), infraReizeger.getGeboortedatum());
             return domainREIZGER;
         } catch (Exception e) {

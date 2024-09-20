@@ -2,22 +2,16 @@ package nl.hu.org.dp.Domain.DAO;
 
 import nl.hu.org.dp.Domain.Adres;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface AdresDOA {
-    default boolean save(){
-        return false;
-    }
+    boolean save(Adres adres)throws SQLException;
 
-    default boolean update() {
-        return false;
-    }
+    boolean update(Adres adres)throws SQLException;
 
-    default boolean delete(){
-        return false;
-    }
+    boolean delete(Adres adres)throws SQLException;
 
-    default List<Adres> findall(){
-        return null;
-    }
+
+    List<Adres> findall()throws SQLException;
 }

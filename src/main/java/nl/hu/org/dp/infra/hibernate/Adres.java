@@ -1,5 +1,12 @@
-package nl.hu.org.dp.Domain;
+package nl.hu.org.dp.infra.hibernate;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "adres")
 public class Adres {
     private int adres_id;
     private String postcode;
@@ -17,30 +24,41 @@ public class Adres {
         this.reiziger_id = reiziger_id;
     }
 
+    public Adres() {
+
+    }
+
     public String toString(){
         return "#" + adres_id + " " + postcode + " " + huisnummer + " " + straat + " " + woonplaats;
     }
 
+    @Column(name = "postcode")
     public String getPostcode() {
         return postcode;
     }
 
+    @Column(name = "huisnummer")
     public String getHuisnummer() {
         return huisnummer;
     }
 
+    @Column(name = "straat")
     public String getStraat() {
         return straat;
     }
 
+    @Column(name = "woonplaats")
     public String getWoonplaats() {
         return woonplaats;
     }
 
+    @Id
+    @Column(name = "adres_id")
     public int getAdres_id() {
         return adres_id;
     }
 
+    @Column(name = "reiziger_id")
     public int getReiziger_id() {
         return reiziger_id;
     }
@@ -57,7 +75,15 @@ public class Adres {
         this.straat = straat;
     }
 
-    public int getReiziger() {
-        return reiziger_id;
+    public void setAdres_id(int adres_id) {
+        this.adres_id = adres_id;
+    }
+
+    public void setWoonplaats(String woonplaats) {
+        this.woonplaats = woonplaats;
+    }
+
+    public void setReiziger_id(int reiziger_id) {
+        this.reiziger_id = reiziger_id;
     }
 }

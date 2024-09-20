@@ -3,9 +3,11 @@ package nl.hu.org.dp.infra.DOA;
 import nl.hu.org.dp.Domain.DAO.ReizigerDAO;
 import nl.hu.org.dp.Domain.Reiziger;
 
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 public class ReizigerDAOPsql implements ReizigerDAO {
@@ -79,8 +81,14 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             x = (Reiziger) x;
             if (((Reiziger) x).getReiziger_id() == reiziger.getReiziger_id()){
                 getConnection();
-                String query = "DELETE FROM reiziger WHERE reiziger_id = ?";
+                String query = "DELETE FROM adres WHERE reiziger_id = ?";
                 PreparedStatement statement = connection.prepareStatement(query);
+                statement.setInt(1, reiziger.getReiziger_id());
+                statement.executeUpdate();
+                closeConnection();
+                getConnection();
+                query = "DELETE FROM reiziger WHERE reiziger_id = ?";
+                statement = connection.prepareStatement(query);
                 statement.setInt(1, reiziger.getReiziger_id());
                 statement.executeUpdate();
                 closeConnection();
@@ -93,7 +101,16 @@ public class ReizigerDAOPsql implements ReizigerDAO {
 
     @Override
     public Reiziger findById(int id) throws SQLException {
-        return null;
+        getConnection();
+        String query = "SELECT * FROM reiziger WHERE reiziger_id = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, id);
+        ResultSet set = statement.executeQuery();
+        set.next();
+        closeConnection();
+        return new Reiziger(set.getInt("reiziger_id"), set.getString("voorletters")
+                , set.getString("tussenvoegsel"), set.getString("achternaam"),
+                java.sql.Date.valueOf(set.getString("geboortedatum")));
     }
 
     @Override
