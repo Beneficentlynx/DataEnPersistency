@@ -2,7 +2,9 @@ package nl.hu.org.dp.infra.DOA;
 
 import nl.hu.org.dp.Domain.DAO.OV_chipkaartDOA;
 import nl.hu.org.dp.Domain.OV_chipkaart;
+import nl.hu.org.dp.Domain.Product;
 import nl.hu.org.dp.Domain.Reiziger;
+import nl.hu.org.dp.infra.DOA.ReizigerDAOPsql;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -29,6 +31,12 @@ public class OV_chipkaartDOAPSQL implements OV_chipkaartDOA {
 
     @Override
     public boolean save(OV_chipkaart ov_chipkaart) throws SQLException {
+        ProductDAOPsql productDAOPsql = new ProductDAOPsql();
+        if (productDAOPsql != null) {
+            for (Product p : ov_chipkaart.getProducten()) {
+                productDAOPsql.save(p);
+            }
+        }
         getConnection();
         String query = "INSERT INTO OV_chipkaart(kaart_nummer, geldig_tot, klasse, saldo, reiziger_id) VALUES(?, ?, ?, ?, ?)";
         try {
@@ -68,6 +76,10 @@ public class OV_chipkaartDOAPSQL implements OV_chipkaartDOA {
 
     @Override
     public boolean delete(OV_chipkaart ov_chipkaart) throws SQLException {
+        if(findById(ov_chipkaart.getKaart_nummer()) != null){
+            ProductDAOPsql productDAOPsql = new ProductDAOPsql();
+            productDAOPsql.deleteRelatie(ov_chipkaart);
+        }
         getConnection();
         String query = "DELETE FROM OV_chipkaart WHERE kaart_nummer = ?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -88,7 +100,8 @@ public class OV_chipkaartDOAPSQL implements OV_chipkaartDOA {
         if(!set.next()){
             return null;
         }
-        return new OV_chipkaart(set.getInt("kaart_nummer"), set.getDate("geldig_tot"), set.getInt("klasse"), set.getFloat("saldo"), set.getInt("reiziger_id"));
+        Reiziger reiziger = new ReizigerDAOPsql().findById(set.getInt("reiziger_id"));
+        return new OV_chipkaart(set.getInt("kaart_nummer"), set.getDate("geldig_tot"), set.getInt("klasse"), set.getFloat("saldo"), reiziger);
     }
 
     @Override
@@ -100,7 +113,8 @@ public class OV_chipkaartDOAPSQL implements OV_chipkaartDOA {
         closeConnection();
         ArrayList<OV_chipkaart> returnlist = new ArrayList<>();
         while (set != null && set.next()) {
-            returnlist.add(new OV_chipkaart(set.getInt("kaart_nummer"), set.getDate("geldig_tot"), set.getInt("klasse"), set.getFloat("saldo"), set.getInt("reiziger_id")));
+            Reiziger reiziger = new ReizigerDAOPsql().findById(set.getInt("reiziger_id"));
+            returnlist.add(new OV_chipkaart(set.getInt("kaart_nummer"), set.getDate("geldig_tot"), set.getInt("klasse"), set.getFloat("saldo"), reiziger));
         }
         return returnlist;
     }
@@ -121,7 +135,8 @@ public class OV_chipkaartDOAPSQL implements OV_chipkaartDOA {
         closeConnection();
         ArrayList<OV_chipkaart> returnlist = new ArrayList<>();
         while (set != null && set.next()) {
-            returnlist.add(new OV_chipkaart(set.getInt("kaart_nummer"), set.getDate("geldig_tot"), set.getInt("klasse"), set.getFloat("saldo"), set.getInt("reiziger_id")));
+            Reiziger reiziger = new ReizigerDAOPsql().findById(set.getInt("reiziger_id"));
+            returnlist.add(new OV_chipkaart(set.getInt("kaart_nummer"), set.getDate("geldig_tot"), set.getInt("klasse"), set.getFloat("saldo"), reiziger));
         }
         return returnlist;
     }

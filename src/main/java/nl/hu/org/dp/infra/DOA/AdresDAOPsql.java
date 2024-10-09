@@ -95,7 +95,10 @@ public class AdresDAOPsql implements AdresDOA {
         closeConnection();
         ArrayList<Adres> returnlist = new ArrayList<>();
         while (set != null && set.next()) {
-            returnlist.add(new Adres(set.getInt("adres_id"), set.getString("postcode"), set.getString("huisnummer"), set.getString("straat"), set.getString("woonplaats"), set.getInt("reiziger_id")));
+
+
+            Reiziger reiziger = new ReizigerDAOPsql().findById(set.getInt("reiziger_id"));
+            returnlist.add(new Adres(set.getInt("adres_id"), set.getString("postcode"), set.getString("huisnummer"), set.getString("straat"), set.getString("woonplaats"), reiziger));
         }
         return returnlist;
     }
@@ -110,7 +113,8 @@ public class AdresDAOPsql implements AdresDOA {
             return null;
         }
         closeConnection();
-        return new Adres(set.getInt("adres_id"), set.getString("postcode"), set.getString("huisnummer"), set.getString("straat"), set.getString("woonplaats"), set.getInt("reiziger_id"));
+        Reiziger reiziger = new ReizigerDAOPsql().findById(set.getInt("reiziger_id"));
+        return new Adres(set.getInt("adres_id"), set.getString("postcode"), set.getString("huisnummer"), set.getString("straat"), set.getString("woonplaats"), reiziger);
     }
 
     public Adres findByAdresID(int adres_id) throws SQLException {
@@ -123,6 +127,7 @@ public class AdresDAOPsql implements AdresDOA {
             return null;
         }
         closeConnection();
-        return new Adres(set.getInt("adres_id"), set.getString("postcode"), set.getString("huisnummer"), set.getString("straat"), set.getString("woonplaats"), set.getInt("reiziger_id"));
+        Reiziger reiziger = new ReizigerDAOPsql().findById(set.getInt("reiziger_id"));
+        return new Adres(set.getInt("adres_id"), set.getString("postcode"), set.getString("huisnummer"), set.getString("straat"), set.getString("woonplaats"), reiziger);
     }
 }

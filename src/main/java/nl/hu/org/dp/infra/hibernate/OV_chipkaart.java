@@ -1,43 +1,58 @@
 package nl.hu.org.dp.infra.hibernate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "ov_chipkaart")
 public class OV_chipkaart {
-
+    @Id
+    @Column(name = "kaart_nummer")
     private int kaart_nummer;
+    @Column(name = "geldig_tot")
     private Date geldig_tot;
+    @Column(name = "klasse")
     private int klasse;
+    @Column(name = "saldo")
     private double saldo;
-    private int reiziger_id;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "reiziger_id")
+    private Reiziger reiziger;
+    @ManyToMany(mappedBy = "ovChipkaarten")
+    private List<Product> producten = new ArrayList<>();
 
-    public OV_chipkaart(int kaart_nummer, Date geldig_tot, int klasse, double saldo, int reiziger_id) {
+    public Reiziger getReiziger() {
+        return reiziger;
+    }
+
+    public void setReiziger(Reiziger reiziger) {
+        this.reiziger = reiziger;
+    }
+
+    public OV_chipkaart(int kaart_nummer, Date geldig_tot, int klasse, double saldo, Reiziger reiziger) {
         this.kaart_nummer = kaart_nummer;
         this.geldig_tot = geldig_tot;
         this.klasse = klasse;
         this.saldo = saldo;
-        this.reiziger_id = reiziger_id;
+        this.reiziger = reiziger;
     }
 
     public OV_chipkaart() {
     }
 
     public String toString() {
-        return "#" + kaart_nummer + " Geldig tot: " + geldig_tot + " klasse: " + klasse + " saldo: " + saldo + " reiziger_ID: " + reiziger_id;
+        return "#" + kaart_nummer + " Geldig tot: " + geldig_tot + " klasse: " + klasse + " saldo: " + saldo + " reiziger_ID: " + reiziger.getReiziger_id();
     }
-    @Id
-    @Column(name = "kaart_nummer")
+
     public int getKaart_nummer() {
         return kaart_nummer;
     }
 
-    @Column(name = "geldig_tot")
+
     public Date getGeldig_tot() {
         return geldig_tot;
     }
@@ -46,19 +61,14 @@ public class OV_chipkaart {
         this.geldig_tot = geldig_tot;
     }
 
-    @Column(name = "klasse")
+
     public int getKlasse() {
         return klasse;
     }
 
-    @Column(name = "saldo")
+
     public double getSaldo() {
         return saldo;
-    }
-
-    @Column(name = "reiziger_id")
-    public int getReiziger_id() {
-        return reiziger_id;
     }
 
 
@@ -70,12 +80,9 @@ public class OV_chipkaart {
         this.saldo = saldo;
     }
 
-    public void setReiziger_id(int reiziger_id) {
-        this.reiziger_id = reiziger_id;
-    }
-
     public void setKaart_nummer(int kaart_nummer) {
         this.kaart_nummer = kaart_nummer;
     }
+
 
 }

@@ -1,27 +1,36 @@
 package nl.hu.org.dp.infra.hibernate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "adres")
 public class Adres {
+    @Id
+    @Column(name = "adres_id")
     private int adres_id;
+    @Column(name = "postcode")
     private String postcode;
+    @Column(name = "huisnummer")
     private String huisnummer;
+    @Column(name = "straat")
     private String straat;
+    @Column(name = "woonplaats")
     private String woonplaats;
-    private int reiziger_id;
+    @OneToOne(
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(name = "reiziger_id")
+    private Reiziger reiziger;
 
-    public Adres(int adres_id, String postcode, String huisnummer, String straat, String woonplaats, int reiziger_id){
+    public Adres(int adres_id, String postcode, String huisnummer, String straat, String woonplaats, Reiziger reiziger){
         this.adres_id = adres_id;
         this.postcode = postcode;
         this.huisnummer = huisnummer;
         this.straat = straat;
         this.woonplaats = woonplaats;
-        this.reiziger_id = reiziger_id;
+        this.reiziger = reiziger;
     }
 
     public Adres() {
@@ -32,36 +41,31 @@ public class Adres {
         return "#" + adres_id + " " + postcode + " " + huisnummer + " " + straat + " " + woonplaats;
     }
 
-    @Column(name = "postcode")
+
     public String getPostcode() {
         return postcode;
     }
 
-    @Column(name = "huisnummer")
+
     public String getHuisnummer() {
         return huisnummer;
     }
 
-    @Column(name = "straat")
+
     public String getStraat() {
         return straat;
     }
 
-    @Column(name = "woonplaats")
+
     public String getWoonplaats() {
         return woonplaats;
     }
 
-    @Id
-    @Column(name = "adres_id")
+
     public int getAdres_id() {
         return adres_id;
     }
 
-    @Column(name = "reiziger_id")
-    public int getReiziger_id() {
-        return reiziger_id;
-    }
 
     public void setPostcode(String postcode){
         this.postcode = postcode;
@@ -83,7 +87,12 @@ public class Adres {
         this.woonplaats = woonplaats;
     }
 
-    public void setReiziger_id(int reiziger_id) {
-        this.reiziger_id = reiziger_id;
+
+    public void setReiziger(Reiziger reiziger) {
+        this.reiziger = reiziger;
+    }
+
+    public Reiziger getReiziger() {
+        return reiziger;
     }
 }

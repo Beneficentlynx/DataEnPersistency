@@ -1,20 +1,25 @@
 package nl.hu.org.dp.Domain;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class OV_chipkaart {
     private int kaart_nummer;
     private Date geldig_tot;
     private int klasse;
     private float saldo;
+    private Reiziger reiziger;
     private int reiziger_id;
+    private ArrayList<Product> producten = new ArrayList<>();
 
-    public OV_chipkaart(int kaart_nummer, Date geldig_tot, int klasse, float saldo, int reiziger_id){
+    public OV_chipkaart(int kaart_nummer, Date geldig_tot, int klasse, float saldo, Reiziger reiziger){
         this.kaart_nummer = kaart_nummer;
         this.geldig_tot = geldig_tot;
         this.klasse = klasse;
         this.saldo = saldo;
-        this.reiziger_id = reiziger_id;
+        this.reiziger = reiziger;
+        this.reiziger_id = reiziger.getReiziger_id();
+        this.producten = new ArrayList<>();
     }
 
     public String toString(){
@@ -44,4 +49,45 @@ public class OV_chipkaart {
     public void setSaldo(float saldo){
         this.saldo = saldo;
     }
+
+    public void setGeldig_tot(Date geldig_tot){
+        this.geldig_tot = geldig_tot;
+    }
+
+    public void setKlasse(int klasse){
+        this.klasse = klasse;
+    }
+
+    public void setReiziger(Reiziger reiziger){
+        this.reiziger = reiziger;
+    }
+
+    public void setReiziger_id(int reiziger_id){
+        this.reiziger_id = reiziger_id;
+    }
+
+    public void setKaart_nummer(int kaart_nummer){
+        this.kaart_nummer = kaart_nummer;
+    }
+
+    public Reiziger getReiziger(){
+        return reiziger;
+    }
+
+    public void setReiziger_id(Reiziger reiziger){
+        this.reiziger = reiziger;
+    }
+
+    public ArrayList<Product> getProducten() {
+        return producten;
+    }
+
+    public void addProduct(Product product){
+        producten.add(product);
+    }
+
+    public void removeProduct(Product product){
+        producten.remove(product);
+    }
+
 }

@@ -27,8 +27,9 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
                 return false;
             }
             Reiziger infraReizeger = new Reiziger(reiziger.getReiziger_id(), reiziger.getVoorletters(), reiziger.getTussenvoegsel(), reiziger.getAchternaam(), reiziger.getGeboortedatum());
+            session.beginTransaction();
             session.persist(infraReizeger);
-            session.beginTransaction().commit();
+            session.getTransaction().commit();
             return true;
         } catch (Exception e) {
             return false;
@@ -38,12 +39,16 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
     public boolean update(nl.hu.org.dp.Domain.Reiziger reiziger) throws SQLException {
         try {
             Reiziger infraReizeger = session.get(Reiziger.class, reiziger.getReiziger_id());
+            if(infraReizeger == null){
+                return false;
+            }
             infraReizeger.setVoorletters(reiziger.getVoorletters());
             infraReizeger.setTussenvoegsel(reiziger.getTussenvoegsel());
             infraReizeger.setAchternaam(reiziger.getAchternaam());
             infraReizeger.setGeboortedatum(reiziger.getGeboortedatum());
+            session.beginTransaction();
             session.merge(infraReizeger);
-            session.beginTransaction().commit();
+            session.getTransaction().commit();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,8 +60,12 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
     public boolean delete(nl.hu.org.dp.Domain.Reiziger reiziger) throws SQLException {
         try {
             Reiziger infraReizeger = session.get(Reiziger.class, reiziger.getReiziger_id());
+            if(infraReizeger == null){
+                return false;
+            }
+            session.beginTransaction();
             session.remove(infraReizeger);
-            session.beginTransaction().commit();
+            session.getTransaction().commit();
             return true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,7 +6,7 @@
         <property name="connection.password">Zwemmen2004.</property>
 
         <!-- JDBC connection pool (use the build-in) -->
-        <property name="connection.pool_size">1</property>
+        <property name="connection.pool_size">1000</property>
 
         <!-- thread is the short name for org.hibernate.context.ThreadLocalSessionContext -->
         <property name="current_session_context_class">thread</property>
@@ -18,6 +18,7 @@
         <mapping class="nl.hu.org.dp.infra.hibernate.Adres"></mapping>
         <mapping class="nl.hu.org.dp.infra.hibernate.Reiziger"></mapping>
         <mapping class="nl.hu.org.dp.infra.hibernate.OV_chipkaart"></mapping>
+        <mapping class="nl.hu.org.dp.infra.hibernate.Product"></mapping>
     </session-factory>
 
 </hibernate-configuration>

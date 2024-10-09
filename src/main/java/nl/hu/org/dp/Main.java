@@ -2,12 +2,16 @@ package nl.hu.org.dp;
 
 import nl.hu.org.dp.Domain.Adres;
 import nl.hu.org.dp.Domain.OV_chipkaart;
+import nl.hu.org.dp.Domain.Product;
 import nl.hu.org.dp.infra.DOA.AdresDAOPsql;
 import nl.hu.org.dp.infra.DOA.OV_chipkaartDOAPSQL;
+import nl.hu.org.dp.infra.DOA.ProductDAOPsql;
 import nl.hu.org.dp.infra.DOA.ReizigerDAOPsql;
 import nl.hu.org.dp.Domain.Reiziger;
+import nl.hu.org.dp.infra.HibernateUtil;
 import nl.hu.org.dp.infra.hibernate.AdresDAOHibernate;
 import nl.hu.org.dp.infra.hibernate.OV_chipkaartDAOHibernate;
+import nl.hu.org.dp.infra.hibernate.ProductDAOHibernate;
 import nl.hu.org.dp.infra.hibernate.ReizigerDAOHibernate;
 
 import java.sql.*;
@@ -19,6 +23,7 @@ public class Main {
     private static ReizigerDAOHibernate reizigerDAOHibernate = new ReizigerDAOHibernate();
     private static AdresDAOHibernate adresDAOHibernate = new AdresDAOHibernate();
     private static OV_chipkaartDAOHibernate ov_chipkaartDAOHibernate = new OV_chipkaartDAOHibernate();
+    private static ProductDAOHibernate productDAOHibernate = new ProductDAOHibernate();
 
     private static Connection getConnection() throws SQLException {
         if (connection == null) {
@@ -123,14 +128,15 @@ public class Main {
         System.out.println(adoap.findall());
         System.out.println("\n---------- Delete adres------------------");
         int size = adoap.findall().size();
-        System.out.println(adoap.delete(new Adres(8, "1234AB", "12", "Straat", "Woonplaats", 12)));
+        Reiziger reiziger = new Reiziger(12, "K", "", "Joost", java.sql.Date.valueOf("2002-12-03"));
+        System.out.println(adoap.delete(new Adres(8, "1234AB", "12", "Straat", "Woonplaats", reiziger)));
         System.out.println(adoap.findall().size() - size);
         System.out.println("\n---------- Save adres--------------------");
         size = adoap.findall().size();
-        System.out.println(adoap.save(new Adres(8, "1234AB", "12", "Straat", "Woonplaats", 12)));
+        System.out.println(adoap.save(new Adres(8, "1234AB", "12", "Straat", "Woonplaats", reiziger)));
         System.out.println(adoap.findall().size() - size);
         System.out.println("\n---------- Update adres------------------");
-        Adres updateAdres = new Adres(8, "1234AB", "12", "Straat", "Woonplaats", 12);
+        Adres updateAdres = new Adres(8, "1234AB", "12", "Straat", "Woonplaats", reiziger);
         System.out.println(updateAdres);
         updateAdres.setHuisnummer("13");
         updateAdres.setStraat("Straatje");
@@ -150,24 +156,24 @@ public class Main {
 
     private static void testAdresDOAHibernate() throws SQLException {
         Reiziger reiziger = new Reiziger(22, "K", "", "Joost", java.sql.Date.valueOf("2002-12-03"));
-        reizigerDAOHibernate.save(reiziger);
+        reizigerDAOHibernate.delete(reiziger);
         System.out.println("--------- TEST ADRES HIBERNATE ---------");
         System.out.println("--------- SAVE ---------");
-        Adres adres = new Adres(22, "1234AB", "12", "Straat", "Woonplaats", 22);
-        System.out.println(adresDAOHibernate.delete(adres));
+        Adres adres = new Adres(22, "1234AB", "12", "Straat", "Woonplaats", reiziger);
         System.out.println(adresDAOHibernate.save(adres));
         System.out.println("--------- DELETE ---------");
         System.out.println(adresDAOHibernate.delete(adres));
         System.out.println("--------- FIND BY ID ---------");
         System.out.println(adresDAOHibernate.findByAdresID(1));
-        System.out.println(adresDAOHibernate.findByAdresID(23));
         System.out.println("--------- FIND ALL ---------");
         System.out.println(adresDAOHibernate.findall());
         System.out.println("--------- Find By ReizigerID ---------");
         System.out.println(adresDAOHibernate.findByReiziger(1));
-        System.out.println(adresDAOHibernate.findByReiziger(23));
         System.out.println("--------- UPDATE ---------");
-        System.out.println(adresDAOHibernate.save(adres));
+        reizigerDAOHibernate.delete(reiziger);
+
+        adresDAOHibernate.save(adres);
+        System.out.println(adresDAOHibernate.findByAdresID(22));
         adres.setHuisnummer("13");
         adres.setStraat("Straatje");
         adresDAOHibernate.update(adres);
@@ -175,48 +181,107 @@ public class Main {
     }
 
     public static void testOV_chipkaartDAO(OV_chipkaartDOAPSQL ovcds) throws SQLException {
+        Reiziger reiziger = new Reiziger(1, "K", "", "Joost", java.sql.Date.valueOf("2002-12-03"));
         System.out.println("\n---------- Test OV_chipkaartDAO -------------");
         System.out.println("---------- Find all OV_chipkaarten -------------");
         System.out.println(ovcds.findAll());
         System.out.println("---------- Find OV_chipkaart by id -------------");
         System.out.println(ovcds.findById(35283));
         System.out.println("---------- Save OV_chipkaart -------------");
-        System.out.println(ovcds.save(new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, 1)));
+        System.out.println(ovcds.save(new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, reiziger)));
         System.out.println(ovcds.findById(3));
         System.out.println("---------- Update OV_chipkaart -------------");
-        OV_chipkaart ov_chipkaart = new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, 1);
+        OV_chipkaart ov_chipkaart = new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, reiziger);
         ov_chipkaart.setSaldo(30.0f);
         System.out.println(ovcds.update(ov_chipkaart));
         System.out.println(ovcds.findById(3));
         System.out.println("-----------------find by reiziger ID-----------------");
         System.out.println(ovcds.findByReizigerID(1));
         System.out.println("---------- Delete OV_chipkaart -------------");
-        System.out.println(ovcds.delete(new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, 1)));
+        System.out.println(ovcds.delete(new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, reiziger)));
 
     }
 
     public static void testOV_chipkaartDAOHibernate() throws SQLException {
+        Reiziger reiziger = new Reiziger(99, "K", "", "Joost", java.sql.Date.valueOf("2002-12-03"));
+        reizigerDAOHibernate.delete(reiziger);
         System.out.println("\n---------- Test OV_chipkaartDAOHibernate -------------");
         System.out.println("---------- Find all OV_chipkaarten -------------");
         System.out.println(ov_chipkaartDAOHibernate.findAll());
         System.out.println("---------- Find OV_chipkaart by id -------------");
         System.out.println(ov_chipkaartDAOHibernate.findById(35283));
         System.out.println("---------- Save OV_chipkaart -------------");
-        System.out.println(ov_chipkaartDAOHibernate.save(new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, 1)));
+        System.out.println(ov_chipkaartDAOHibernate.save(new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, reiziger)));
         System.out.println(ov_chipkaartDAOHibernate.findById(3));
         System.out.println("---------- Update OV_chipkaart -------------");
-        OV_chipkaart ov_chipkaart = new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, 1);
+        OV_chipkaart ov_chipkaart = new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, reiziger);
         ov_chipkaart.setSaldo(30.0f);
         System.out.println(ov_chipkaartDAOHibernate.update(ov_chipkaart));
         System.out.println(ov_chipkaartDAOHibernate.findById(3));
         System.out.println("-----------------find by reiziger ID-----------------");
-        System.out.println(ov_chipkaartDAOHibernate.findByReiziger(new nl.hu.org.dp.infra.hibernate.Reiziger(1, "K", "", "Joost", java.sql.Date.valueOf("2002-12-03"))));
+        System.out.println(ov_chipkaartDAOHibernate.findByReiziger(new nl.hu.org.dp.infra.hibernate.Reiziger(99, "K", "", "Joost", java.sql.Date.valueOf("2002-12-03"))));
         System.out.println("---------- Delete OV_chipkaart -------------");
-        System.out.println(ov_chipkaartDAOHibernate.delete(new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, 1)));
+        System.out.println(ov_chipkaartDAOHibernate.delete(new OV_chipkaart(3, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, reiziger)));
+    }
+
+    public static void testProductDAO(ProductDAOPsql prdsq, OV_chipkaartDOAPSQL ovcds) throws Exception {
+        getConnection();
+
+        OV_chipkaart ovChipkaart = ovcds.findById(35283);
+        OV_chipkaart ovChipkaart2 = ovcds.findById(79625);
+
+        System.out.println("nieuw product");
+        Product product = new Product(8, "Weekkaart 2e klas", "Een week lang reizen in de 2e klas", 150.0f);
+        product.addOVKaart(ovChipkaart);
+        product.addOVKaart(ovChipkaart2);
+        prdsq.save(product);
+        System.out.println(prdsq.findById(8));
+
+        product.setPrijs(200.0f);
+        prdsq.update(product);
+        System.out.println( "\nProduct met nieuwe prijs\n" + prdsq.findById(8));
+
+        System.out.println( "\nfindByOVChipkaart\n" + prdsq.findByOVChipkaart(ovChipkaart));
+
+        prdsq.delete(prdsq.findById(8));
+        System.out.println("\nProduct verwijderd\n" + prdsq.findById(8));
+
+        closeConnection();
+    }
+
+    public static void testproductDaoHibernate() throws SQLException {
+        HibernateUtil.openSession();
+        System.out.println("\n---------- Test ProductDAOHibernate -------------");
+        System.out.println("---------- Find all products -------------");
+        System.out.println(productDAOHibernate.findAll());
+        System.out.println("---------- Find product by id -------------");
+        System.out.println(productDAOHibernate.findById(1));
+        System.out.println("---------- Save product -------------");
+        HibernateUtil.getSession().beginTransaction();
+        Product product = new Product(99, "test", "test", 1.0f);
+        product.addOVKaart(ov_chipkaartDAOHibernate.findById(35283));
+        System.out.println(product.getOvChipkaarten());
+        System.out.println(productDAOHibernate.save(product));
+        HibernateUtil.getSession().getTransaction().commit();
+        System.out.println(productDAOHibernate.findById(99));
+        System.out.println("---------- Update product -------------");
+        HibernateUtil.getSession().beginTransaction();
+        System.out.println(productDAOHibernate.update(new Product(99, "test", "test2", 1.0f)));
+        HibernateUtil.getSession().getTransaction().commit();
+        System.out.println(productDAOHibernate.findById(99));
+        System.out.println("---------- Delete product -------------");
+        HibernateUtil.getSession().beginTransaction();
+        System.out.println(productDAOHibernate.delete(new Product(99, "test", "test2", 1.0f)));
+        HibernateUtil.getSession().getTransaction().commit();
+        System.out.println("---------- Find by OV_chipkaart -------------");
+        HibernateUtil.getSession().beginTransaction();
+        System.out.println(productDAOHibernate.findByOVChipkaart(new nl.hu.org.dp.infra.hibernate.OV_chipkaart(35283, java.sql.Date.valueOf("2022-09-01"), 2, 25.0f, new nl.hu.org.dp.infra.hibernate.Reiziger(1, "K", "", "Joost", java.sql.Date.valueOf("2002-12-03")))));
+        HibernateUtil.getSession().getTransaction().commit();
+
     }
 
 
-    public static void main(String[] args) throws SQLException {
-        testOV_chipkaartDAOHibernate();
+    public static void main(String[] args) throws Exception {
+        testProductDAO(new ProductDAOPsql(), new OV_chipkaartDOAPSQL());
     }
 }
